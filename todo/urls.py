@@ -11,4 +11,4 @@ urlpatterns = [
     path('users/', UserListView.as_view(), name='user-list'),
 ]
 
-print("todo/urls.py is being loaded")
+# print("todo/urls.py is being loaded")
