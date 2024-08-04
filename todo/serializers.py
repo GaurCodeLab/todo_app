@@ -9,7 +9,7 @@ from rest_framework.exceptions import AuthenticationFailed
 class ToDoSerializer(serializers.ModelSerializer):
     class Meta:
         model = ToDo
-        fields = '__all__'
+        fields = ['id', 'user', 'title', 'description']
         
         
 class UserSerializer(serializers.ModelSerializer):
