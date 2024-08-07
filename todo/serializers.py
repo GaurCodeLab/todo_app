@@ -5,11 +5,22 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import AuthenticationFailed
+import datetime
 
 class ToDoSerializer(serializers.ModelSerializer):
+    dueDate = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
     class Meta:
         model = ToDo
-        fields = ['id', 'user', 'title', 'description']
+        fields = ['id', 'user', 'title', 'description', 'dueDate']
+        
+    def get_dueDate(self, obj):
+        dueDate = obj.dueDate
+        print(type(obj.dueDate), obj.dueDate)
+        if dueDate:
+            
+            return dueDate.isoformat()
+        else:
+            return None    
         
         
 class UserSerializer(serializers.ModelSerializer):

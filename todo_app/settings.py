@@ -12,7 +12,23 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import environ
+import os
+from dotenv import load_dotenv
 
+
+load_dotenv()
+
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+environ.Env.read_env()
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+
+
+#print(env('EMAIL_HOST'))
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,8 +53,14 @@ ALLOWED_HOSTS = []
 #     ),
     
 # }
+# Email settings
 
-
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS') == 'True'
 
 # Application definition
 
@@ -56,7 +78,21 @@ INSTALLED_APPS = [
     
     'rest_framework_simplejwt',
     'debug_toolbar',
+    'celery',
 ]
+
+
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_transport = 'redis'
+
+CELERY_BEAT_SCHEDULE = {
+    'send-reminders': {
+        'task': 'tasks.send_reminders',
+        'schedule': '0 8 * * *',  # Run every day at 8am
+    },
+}
 
 INTERNAL_IPS = [
     '127.0.0.1',
